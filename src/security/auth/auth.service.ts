@@ -11,9 +11,20 @@ export class AuthService {
     constructor(
         // Inject any required services here, e.g., UserService for user management
         @InjectRepository(Usuario)
-        private userRepository: Repository<Usuario>,
-        private jwtService: JwtService
+        private readonly userRepository: Repository<Usuario>,
+        private readonly jwtService: JwtService
     ) {}
+
+    async register(username: string, password: string, rol: string): Promise<Usuario> {
+        const existingUser = await this.userRepository.findOne({ where: { username } });
+        if (existingUser) {
+            throw new Error('Username already exists');
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = this.userRepository.create({ username, password: hashedPassword, rol });
+        return this.userRepository.save(newUser);
+    }
 
 
     async ValidateUseer(username: string, password: string): Promise<Usuario> {

@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PassThrough } from 'stream';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsuariosModule } from './data/usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -12,13 +10,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: 5432,
       username: 'postgres',
       password: '12345',
-      database: 'postgres',
+      database: 'postu_db_nest',
       autoLoadEntities: true,
       synchronize: true,
-      entities: [PassThrough], // Example entity, replace with actual entities
-    })
+    }),
+    UsuariosModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
